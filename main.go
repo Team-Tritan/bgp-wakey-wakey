@@ -12,9 +12,14 @@ const (
 	pingArguments = "-c"
 	audioFile     = "wakeywakey.mp3"
 	audioCommand  = "mpv"
+	pingInterval  = 5 * time.Second
+	maxFailures   = 3
 )
 
-var audioRunning bool
+var (
+	audioRunning     bool
+	consecutiveFails int
+)
 
 func main() {
 	for {
@@ -22,18 +27,21 @@ func main() {
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Cannot reach router:", err)
-			if !audioRunning {
+			consecutiveFails++
+			if consecutiveFails >= maxFailures && !audioRunning {
 				playAudio()
 				audioRunning = true
+				fmt.Println("Consecutive failures:", consecutiveFails)
 			}
 		} else {
 			if audioRunning {
 				stopAudio()
 				audioRunning = false
 			}
+			consecutiveFails = 0
 		}
 
-		time.Sleep(time.Second * 60)
+		time.Sleep(pingInterval)
 	}
 }
 
