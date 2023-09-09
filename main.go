@@ -33,8 +33,6 @@ func main() {
 			}
 		}
 
-		go monitorAudio()
-
 		time.Sleep(time.Second * 60)
 	}
 }
@@ -52,15 +50,5 @@ func stopAudio() {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error stopping audio:", err)
-	}
-}
-
-func monitorAudio() {
-	cmd := exec.Command("pgrep", audioCommand)
-	err := cmd.Run()
-
-	if err != nil {
-		fmt.Println("Audio player is not running. Restarting audio.")
-		playAudio()
 	}
 }
