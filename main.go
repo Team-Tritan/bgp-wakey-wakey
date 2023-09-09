@@ -34,6 +34,7 @@ func main() {
 				fmt.Println("Consecutive failures:", consecutiveFails)
 			}
 		} else {
+			fmt.Println("Router heartbeat worky!")
 			if audioRunning {
 				stopAudio()
 				audioRunning = false
